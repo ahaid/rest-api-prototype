@@ -1,14 +1,12 @@
 package com.solidfire.hi.api
 
-import javax.net.ssl.{ SSLSession, HostnameVerifier, HttpsURLConnection }
+import javax.net.ssl.{HostnameVerifier, HttpsURLConnection, SSLSession}
 
-import com.solidfire.element.api.InternalSolidFireElement
+import com.solidfire.client.ElementFactory
 
 object ClusterSvc {
-  val version = "7.0"
-  val element = InternalSolidFireElement.create("192.168.139.165", version, "admin", "admin")
+  val element = ElementFactory.create("10.117.61.42", "admin", "admin")
   HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier {
     override def verify(s: String, sslSession: SSLSession): Boolean = true
   })
-
 }

@@ -5,7 +5,7 @@ import java.lang.Long._
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.solidfire.element.api._
 import com.solidfire.hi.api.ClusterSvc
-import com.solidfire.javautil.Optional
+import com.solidfire.jsvcgen.javautil.Optional
 import org.json4s._
 import org.scalatra._
 

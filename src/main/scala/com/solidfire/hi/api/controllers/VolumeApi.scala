@@ -5,9 +5,9 @@ import java.lang.Long._
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.solidfire.element.api.{CreateVolumeRequest, ListVolumesRequest, QoS, Volume}
 import com.solidfire.hi.api.ClusterSvc
-import com.solidfire.javautil.Optional
+import com.solidfire.jsvcgen.javautil.Optional
 import org.json4s._
-import org.scalatra.{ CorsSupport, NotFound, Ok, ScalatraServlet }
+import org.scalatra.{CorsSupport, NotFound, Ok, ScalatraServlet}
 
 import scala.util.Try
 
@@ -26,12 +26,7 @@ class VolumeApi(implicit val objectMapper: ObjectMapper) extends ScalatraServlet
   get("/") {
     val name = params.getAs[String]("name")
     val volumes =
-      if (ClusterSvc.version.toFloat >= 8.0f) {
-
         ClusterSvc.element.listVolumes(new ListVolumesRequest(null, null, null, null, null)).getVolumes
-      } else {
-        ClusterSvc.element.listActiveVolumes(null, null).getVolumes ++ ClusterSvc.element.listDeletedVolumes().getVolumes
-      }
     if (name.isDefined) {
       Ok(objectMapper.writerWithDefaultPrettyPrinter.writeValueAsString(volumes.filter(v => v.getName.indexOf(name.getOrElse(v.getName)) > -1)))
     } else {
@@ -50,7 +45,7 @@ class VolumeApi(implicit val objectMapper: ObjectMapper) extends ScalatraServlet
       val minIops = body.findValue("minIops").asLong
       val maxIops = body.findValue("maxIops").asLong
       val burstIops = body.findValue("burstIops").asLong
-      Optional.of(new QoS(minIops, maxIops, burstIops, 1l))
+      Optional.of(new QoS(Optional.of(minIops), Optional.of(maxIops), Optional.of(burstIops), Optional.EMPTY_LONG))
     } else null
 
     val result = ClusterSvc.element.createVolume(new CreateVolumeRequest(name, accountID, totalSize * 1024 * 1024 * 1024, enable512E, qos, null))
@@ -73,12 +68,8 @@ class VolumeApi(implicit val objectMapper: ObjectMapper) extends ScalatraServlet
 
   private def getVolume(id: Long): Volume = {
     val volumes: Array[Volume] =
-      if (ClusterSvc.version.toFloat >= 8.0f) {
-        ClusterSvc.element.listVolumes(new ListVolumesRequest(Optional.of(id), Optional.of(1l), null, null, null)).getVolumes
-      } else {
-        ClusterSvc.element.listActiveVolumes(Optional.of(id), Optional.of(1l)).getVolumes ++ ClusterSvc.element.listDeletedVolumes().getVolumes
-      }
-    volumes.filter(v => v.getVolumeID == id).head
+      ClusterSvc.element.listVolumes(new ListVolumesRequest(Optional.of(id), Optional.of(1l), null, null, null)).getVolumes
+    volumes.find(v => v.getVolumeID == id).getOrElse(throw new Exception(s"Unable to find specified volume id $id"))
   }
 
 }

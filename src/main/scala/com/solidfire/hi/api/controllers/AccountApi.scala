@@ -39,13 +39,13 @@ class AccountApi(implicit val objectMapper: ObjectMapper) extends ScalatraServle
 
   private def listAccounts: Try[Array[Account]] = {
     val accountTry: Try[ListAccountsResult] = Try(
-      element.listAccounts(null, null))
+      ClusterSvc.element.listAccounts(null, null))
     accountTry.map(a => Success(a.getAccounts)).get
   }
 
   private def getAccountById(id: Long): Try[Account] = {
     val accountTry: Try[GetAccountResult] = Try(
-      element.getAccountByID(id))
+      ClusterSvc.element.getAccountByID(id))
     accountTry.map(a => Success(a.getAccount)).get
   }
 

@@ -1,6 +1,7 @@
 package com.solidfire.hi.api.controllers
 
-import com.solidfire.element.api.InternalSolidFireElement
+import com.solidfire.client.ElementFactory
+import com.solidfire.element.api.SolidFireElement
 import org.scalatra.ScalatraServlet
 import sun.misc.BASE64Decoder
 
@@ -16,12 +17,10 @@ trait ScalatraServletBase extends ScalatraServlet {
     basicAuthHeader = request.getHeader("Authentication")
   }
 
-  val version = "7.0"
-
-  lazy val element: InternalSolidFireElement = {
+  lazy val element: SolidFireElement = {
     Try {
       val creds = new BASE64Decoder().decodeBuffer(basicAuthHeader).toString.split(":")
-      InternalSolidFireElement.create("192.168.139.165", version, creds(0), creds(1))
+      ElementFactory.create("10.117.61.42", creds(0), creds(1))
     }.getOrElse(throw new Exception("Cannot Auth!!"))
   }
 }
