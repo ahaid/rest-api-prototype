@@ -1,0 +1,735 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.0.0.1",
+        "title": "Host Integrations REST API",
+        "termsOfService": "http://solidfire.com/terms/api",
+        "contact": {
+            "name": "SolidFire API team",
+            "email": "apiteam@solidfire.com",
+            "url": "http://solidfire.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0"
+        }
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/volume": {
+            "get": {
+                "summary": "Get Volumes",
+                "description": "Gets `Volume` objects from cluster.\nOptional query param of **name** \nfilters the returned array\n",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Volume Name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Volume"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "New Volume",
+                "description": "Add a new `Volume` to the cluster",
+                "operationId": "newVolume",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "NewVolume object that defines the volume being added to the cluster",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/NewVolume"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Volume",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Volume"
+                        }
+                    }
+                }
+            }
+        },
+        "/volume/{id}": {
+            "get": {
+                "summary": "Get one Volume",
+                "description": "Returns a `Volume` based on a single ID",
+                "operationId": "getVolume",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of Volume to fetch",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Volume",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Volume"
+                        }
+                    }
+                }
+            }
+        },
+        "/volume/{id}/stats": {
+            "get": {
+                "summary": "Get VolumeStats for one Volume",
+                "produces": [
+                    "application/json"
+                ],
+                "operationId": "getVolumeStats",
+                "description": "Gets most recent `VolumeStats` for a single volume",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of Volume to fetch VolumeStats",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "VolumeStats",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/VolumeStats"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/encode": {
+            "get": {
+                "summary": "Encode Basic Auth Credentials",
+                "description": "encode the creds",
+                "operationId": "encodeCreds",
+                "parameters": [
+                    {
+                        "name": "creds",
+                        "in": "query",
+                        "description": "Basic Auth Creds as \"username:password\"",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/account": {
+            "get": {
+                "summary": "List all Accounts",
+                "description": "Returns a list of `Account`s",
+                "operationId": "listAccounts",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Account"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add an Account",
+                "description": "Adds a new `Account` to the cluster",
+                "operationId": "addAccount",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "NewAccount object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NewAccount"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Account"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/{id}": {
+            "get": {
+                "summary": "Get one Account by ID",
+                "description": "Returns an `Account` based on a single ID",
+                "operationId": "getAccount",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of Account to fetch",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Account"
+                        }
+                    }
+                }
+            }
+        },
+        "/volumeAccessGroup": {
+            "get": {
+                "summary": "Get VolumeAccessGroups",
+                "description": "Gets `VolumeAccessGroup` objects from cluster.\nOptional query param of **userName** \nfilters the returned array\n",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "VolumeAccessGroup Name",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/VolumeAccessGroup"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "New VolumeAccessGroup",
+                "description": "Add a new `VolumeAccessGroup` to the cluster",
+                "operationId": "newVolumeAccessGroup",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "NewVolumeAccessGroup object that defines the VAG being added to the cluster",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NewVolumeAccessGroup"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "VolumeAccessGroup",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/VolumeAccessGroup"
+                        }
+                    }
+                }
+            }
+        },
+        "/volumeAccessGroup/{id}": {
+            "get": {
+                "summary": "Get one VolumeAccessGroup",
+                "description": "Returns a `VolumeAccessGroup` based on a single ID",
+                "operationId": "getVolumeAccessGroup",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of VolumeAccessGroup to fetch",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "VolumeAccessGroup",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/VolumeAccessGroup"
+                        }
+                    }
+                }
+            }
+        },
+        "/volumeAccessGroup/{id}/volume/{volumeID}": {
+            "put": {
+                "summary": "Add Volume to VolumeAccessGroup",
+                "description": "Adds a `Volume` to a `VolumeAccessGroup`",
+                "operationId": "addVolumeToVolumeAccessGroup",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of VolumeAccessGroup",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "volumeID",
+                        "in": "path",
+                        "description": "ID of Volume",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "VolumeAccessGroup",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/VolumeAccessGroup"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Remove Volume from VolumeAccessGroup",
+                "description": "Removes a `Volume` from a `VolumeAccessGroup`",
+                "operationId": "removeVolumeFromVolumeAccessGroup",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of VolumeAccessGroup",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "volumeID",
+                        "in": "path",
+                        "description": "ID of Volume",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "VolumeAccessGroup",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/VolumeAccessGroup"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "NewVolume": {
+            "type": "object",
+            "required": [
+                "name",
+                "totalSizeGB",
+                "accountID",
+                "enable512E"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "totalSizeGB": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "accountID": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "enable512E": {
+                    "type": "boolean"
+                },
+                "qos": {
+                    "$ref": "#/definitions/QoS"
+                }
+            }
+        },
+        "QoS": {
+            "type": "object",
+            "properties": {
+                "minIops": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "maxIops": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "burstIops": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "Volume": {
+            "type": "object",
+            "properties": {
+                "volumeID": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "accountID": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "access": {
+                    "type": "string"
+                },
+                "createTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "deleteTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "purgeTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "iqn": {
+                    "type": "string"
+                },
+                "volumeAccessGroups": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "volumePairs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/VolumePair"
+                    }
+                },
+                "sliceCount": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "totalSize": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "blockSize": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "NewVolumeAccessGroup": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "VolumeAccessGroup": {
+            "type": "object",
+            "properties": {
+                "volumeAccessGroupID": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "initiators": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "volumes": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            }
+        },
+        "VolumePair": {
+            "type": "object",
+            "properties": {
+                "clusterPairID": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "remoteVolumeID": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "remoteSliceID": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "volumePairUUID": {
+                    "type": "string"
+                }
+            }
+        },
+        "VolumeStats": {
+            "type": "object",
+            "properties": {
+                "accountID": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "actualIOPS": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "asyncDelay": {
+                    "type": "string"
+                },
+                "averageIOPSize": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "burstIOPSCredit": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "clientQueueDepth": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "desiredMetadataHosts": {
+                    "$ref": "#/definitions/MetadataHosts"
+                },
+                "latencyUSec": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "metadataHosts": {
+                    "$ref": "#/definitions/MetadataHosts"
+                },
+                "nonZeroBlocks": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "readLatencyUSec": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "readBytes": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "readOps": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "throttle": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "totalLatencyUSec": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "unalignedReads": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "unalignedWrites": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "volumeAccessGroups": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "voluemID": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "volumeSize": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "volumeUtilization": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "writeLatencyUSec": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "writeBytes": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "writeOps": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "zeroBlocks": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "MetadataHosts": {
+            "type": "object",
+            "properties": {
+                "primary": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "deadSecondaries": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "liveSecondaries": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            }
+        },
+        "Account": {
+            "type": "object",
+            "properties": {
+                "accountID": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "userName": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "initiatorSecret": {
+                    "type": "string"
+                },
+                "targetSecret": {
+                    "type": "string"
+                }
+            }
+        },
+        "NewAccount": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
